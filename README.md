@@ -1,0 +1,1 @@
+See `docs/manual.md`.

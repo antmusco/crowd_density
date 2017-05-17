@@ -1,0 +1,14 @@
+# Python virtualenv, binary files.
+env
+*.pyc
+
+# ROS workspace
+catkin_ws
+
+# Data (will be stored on the server instead)
+data/*
+
+gazebo/build/*
+logs/test/*
+logs/train/*
+logs/valid/*

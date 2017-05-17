@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+  <world name="heisen_world">
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- Alter the physics to perform 5 updates per second,
+         with no gravity, and very quick ODE solving. -->
+    <physics type='ode'>
+      <max_step_size>0.001000</max_step_size>
+      <real_time_factor>1.000000</real_time_factor>
+      <real_time_update_rate>60.0</real_time_update_rate>
+      <gravity>0.0 0.0 0.0</gravity>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>5</iters>
+        </solver>
+      </ode>
+    </physics>
+    <plugin name="Factory" filename="libFactory.so"/>
+  </world>
+</sdf>

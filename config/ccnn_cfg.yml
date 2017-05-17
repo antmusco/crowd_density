@@ -1,0 +1,100 @@
+#==============================================================================
+# Project Configuration
+#==============================================================================
+# Author: Anthony G. Musco
+# Email:  amusco@cs.stonybrook.edu
+# Date:   05/01/2017
+# 
+# This file contains configuration settings shared across the entire project,
+# so make sure that you don't break the pipeline if you modify one of the
+# settings.
+#==============================================================================
+
+#==============================================================================
+# Image Sets
+#==============================================================================
+# All of the generated images go in a single directory (IMG_DIR), but
+# different image sets are listed in the following files. Each of these files
+# contain a list of image names associated with the image set. No image
+# should be a member of two image sets.
+#
+# Each image contains PATCHES_PER_IMAGE patches, so the actual input to the
+# CCNN is NUM_IMGS * PATCHES_PER_IMAGE.
+#
+# NOTE: The following 3 PCT values should sum up to 1.0 and only have 1 decimal
+# point precision. If they do not it may break stuff, as I was too lazy to add
+# checks. You have been warned.
+#==============================================================================
+IMG_NUM:     10000             # Number of images to generate.
+IMG_DIR:     'data/images/'    # Where the generated images are placed.
+IMG_FMT:     '%d-sees-%d'      # Format for an image capture name.
+IMG_EXT:     '.png'            # Image extension.
+DOT_EXT:     '-dots.png'       # Dot-file extension.
+IMG_SET_DIR: 'data/image_sets' # Where the image set lists are placed.
+IMG_SET_FMT: '%s-list.txt'     # Formate for an image set list name.
+TRAIN_PCT:   0.6               # Fraction of training examples.
+VALID_PCT:   0.2               # Fraction of validation examples.
+TEST_PCT:    0.2               # Fraction of test examples.
+
+#==============================================================================
+# Example Sets
+#==============================================================================
+# Examples consist of two imgae features ('patch' and 'density') serialized to
+# a 'Feature File' which TensorFlow utilizes as input. Rather than having a
+# single monolithic file of examples, we break them up into several "Chunks",
+# each containing EXAMPLES_PER_BATCH * BATCHES_PER_CHUNK examples.  Examples
+# are split between 'train', 'valid', and 'test' sets.
+#==============================================================================
+EXL_DIR:     'data/examples'              # Contains 'chunks' of examples.
+EXL_SET_DIR: 'data/example_sets'          # Contains lists of example sets.
+EXL_SET_FMT: '%s-scale%d-list.txt'        # Format for list file name.
+CHUNK_FMT:   'scale%d-chunk%d.tfrecords'  # Set for 'chunk' file name.
+
+#==============================================================================
+# Patch Extraction
+#==============================================================================
+# Images are too large for training, so each image is randomly sampled for a
+# number of smaller patches.
+#==============================================================================
+INCLUDE_FLIPS:    False # Include the horizontal flip.
+DOT_RADIUS_SIGMA: 10.0  # std-dev for dot radius.
+PATCH_PER_IMG:    32    # Patches per image.
+PATCH_WIDTH:      128   # Square patch width.
+BATCH_SIZE:       128   # Patches per batch.
+BATCH_PER_CHUNK:  16    # 'Chunk' of training batches.
+
+#==============================================================================
+# Counting CNN Model Parameters
+#==============================================================================
+# Many of the following are magic numbers which should be tuned using
+# validation sets. The Learning rate shouldn't go above 1.e-7, as backprop
+# diverges otherwise.
+#
+# NOTE: Checkpoints are included with the logs, so be careful not to delete the
+# log directory when learning is done (otherwise you will delete your trained
+# model!)
+#==============================================================================
+CNN_INPUT_WIDTH:      64                # CNN patch width in.
+CNN_OUTPUT_WIDTH:     16                # CNN patch width out.
+CNN_N_SCALES:         3                 # HYDRA number of heads
+CNN_NUM_EPOCHS:       300               # Number of epochs to run.
+CNN_DECAY_START:      50                # Number of epochs to start decay.
+CNN_INIT_LEARN_RATE:  1.e-6             # Initial learning rate.
+CNN_MOV_AVG_DECAY:    0.999             # Decay to use for moving average.
+CNN_DECAY_FACTOR:     0.1               # Decay factor.
+CNN_MODEL_OUTPUT:     'data/ccnn-model' # Output file for trained model.
+TRAIN_CHECKPOINT_DIR: 'logs/train'      # Logs for training session.
+VALID_CHECKPOINT_DIR: 'logs/valid'      # Logs for validation session.
+TEST_CHECKPOINT_DIR:  'logs/test'       # Logs for testing session.
+LOG_DEVICE_PLACE:     True              # Whether to log Tensor device.
+LOG_FREQUENCY:        10                # Batches per log.
+
+#==============================================================================
+# Debug Settings.
+#==============================================================================
+# Whether to display the features while generating them for debug purposes.
+DEBUG_DISPLAY:        False
+# Whether to display the model's prediction when inspecting the images with
+# their density maps.
+INSPECT_DATA_PREDICT: True
+
