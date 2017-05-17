@@ -20,17 +20,32 @@ scripts to automate certain operations, and all of them should be executated on
 your `local` machine. If needed, the script will open up a SSH connection to
 the server to execute desired tasks.
 
+To make things more confusing, there is a third environment which houses the
+Gym-Gazebo application. This is a Docker container based off an image provided
+by Erle-Robtics. If you are unfamiliar, a container is essentially a
+lightweight VM designed to house an application along with its dependencies in
+a single image. The image itself is much smaller than an entire VM, and
+start/stop times are incredibly fast. We use the containerized context of
+Gym-Gazebo so that we can guarantee that the correct versions of various
+dependencies are used without affecting a developer's local environment.
+
 ---
 
 ## Setup
 
 ### Local
 
-#### Project Directory
+#### Getting the Project
 
-Clone the project directory from the remote repository to your desired local
-directory. The project uses Python 2.7, so create a virtual environment if
-your native Python is different. You can check via the following:
+Clone the `crowd_density` project from GitHub to your desired local directory. 
+
+```bash
+# Clone repo to home dir '~/'.
+user@local:~$ git clone https://github.com/antmusco/crowd_density.git ~/crowd_density
+```
+
+The project uses Python 2.7, so create a virtual environment if your native
+Python is different. You can check via the following:
 
 ```bash
 user@local:~$ python --version
@@ -45,11 +60,16 @@ Install Docker on your machine, then pull the image for `Gym-Gazebo`:
 docker pull erlerobotics/gym-gazebo:latest
 ```
 
-Be patient, this process might take a while. You can enter the image by running
-in interactive mode (enter CTRL-D to exit when you are done):
+Be patient, this process might take a while. Once the image is pulled, you can
+make sure everything is set-up correctyl using the `docker-start.sh` script
+(_see more info in the Scripts section below_):
 
 ```bash
-docker run -it erlerobotics/gym-gazebo
+user@local:~$ scripts/docker-start.sh
+# Now in container.
+root$containerID:/usr/local/gym# exit
+# Exited
+user@local:~$ 
 ```
 
 #### Gazebo
@@ -141,15 +161,20 @@ verifying the version:
 
 The main project consists of the following directories:
 
-  - `ccnn`:   Python module for the Counting CNN, implemented in TensorFlow.
-  - `config`: Cross-project configuration properties.
-  - `data`:   Raw images and example files, as well as set lists for each.
-  - `docs`:   Documentation and papers.
-  - `gazebo`: Gazebo plugin code for data generation.
-  - `gym`:    OpenAI Gym code.
-  - `logs`:   Logs for training/testing the Counting CNN. This directory also
-                contains the trained model at `logs/train/checkpoint`
-  - `scripts`: Useful scripts for performing common tasks.
+  - `ccnn`:      Python module for the Counting CNN, implemented in TensorFlow.
+  - `config`:    Cross-project configuration properties. Be sure to read
+                   through this file to see what the configuration parameters
+                   are for the project.
+  - `crowd-gym`: Source code for reinforcement learning using OpenAI Gym and
+                   Gazebo. This directory gets automatically mounted inside the 
+                   `crowd-gym` Docker container, and should be run in that
+                   environmnet.
+  - `data`:      Raw images and example files, as well as set lists for each.
+  - `docs`:      Documentation and manuals.
+  - `gazebo`:    Gazebo plugin code for data generation.
+  - `logs`:      Logs for training/testing the Counting CNN. This directory also
+                   contains the trained model at `logs/train/checkpoint`
+  - `scripts`:   Useful scripts for performing common tasks.
 
 ---
 
@@ -253,4 +278,24 @@ performs by running the `inspect-data.py` Python script. This will overlay the
 ground truth and predicted depth maps, and compare them side by side. Take this
 output to note what the Counting CNN is learning, and whether it is
 generalizing to different scales.
+
+### Attaching To Container
+
+The reinforcement learning context takes place within a Docker container, since
+there are many dependencies that are tricky to get right. To enter the
+container, use the `docker-start.sh` script. This script will check to see if a
+container has been created, and if so, attaches to the container. If not, it
+creates a new container with the name `crowd-gym`.
+
+You can exit a container using the CTRL-D trap. When a container is exited, you
+can re-enter at any time using the `docker-start.sh` script. Any changes you
+make within the container should remain, so you can pick up directly where you
+left off. If you'd like to clear the container and start from scratch, use the
+`docker-stop.sh` script.
+
+When you attach to the `crowd-gym` container, it mounts the `crowd-gym`
+directory to the mount point `/usr/local/crowd-gym`. You can make changes to
+the files in this directory and they will be refelcted within the container in
+real-time. In this way, you can edit the code for the GymGazebo environment in
+on your host while testing it within a container.
 
