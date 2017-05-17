@@ -35,6 +35,8 @@ dependencies are used without affecting a developer's local environment.
 
 ### Local
 
+The following instructions are for Ubuntu 16.04 or greater.
+
 #### Getting the Project
 
 Clone the `crowd_density` project from GitHub to your desired local directory. 

@@ -12,3 +12,6 @@ gazebo/build/*
 logs/test/*
 logs/train/*
 logs/valid/*
+
+# Ignore core dump
+crowd-gym/core

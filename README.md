@@ -1,1 +1,1 @@
-See `docs/manual.md`.
+docs/manual.md
