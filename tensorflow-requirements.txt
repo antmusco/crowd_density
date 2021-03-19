@@ -22,7 +22,7 @@ html5lib==0.999
 httplib2==0.8
 iotop==0.6
 ipython==3.0.0
-Jinja2==2.7.3
+Jinja2==2.11.3
 joblib==0.9.4
 jsonschema==2.4.0
 Keras==1.1.0
