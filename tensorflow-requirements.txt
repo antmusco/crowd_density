@@ -82,7 +82,7 @@ software-center-aptd-plugins==0.0.0
 ssh-import-id==3.21
 system-service==0.1.6
 tabulate==0.7.5
-tensorflow==0.10.0rc0
+tensorflow==2.6.4
 -e git+https://github.com/Theano/Theano.git@54186290a97186b9c6b76317e007844529a352f4#egg=Theano
 thrift-py==0.9.0
 toolz==0.8.0
